@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SNIP — URL Shortener</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="card">
+  <div class="badge">URL Shortener</div>
+  <h1>SN<span>IP</span></h1>
+  <p class="subtitle">Paste a long URL, get a short one.</p>
+
+  <label for="urlInput">Target URL</label>
+  <div class="input-row">
+    <input type="text" id="urlInput" placeholder="https://example.com/very/long/path" autocomplete="off" />
+    <button id="shortenBtn" onclick="shorten()">SNIP</button>
+  </div>
+
+  <div class="error" id="errorMsg"></div>
+
+  <div class="result" id="resultBox">
+    <div class="result-label">✦ Short URL ready</div>
+    <div class="result-row">
+      <span class="short-url" id="shortUrl"></span>
+      <button class="copy-btn" onclick="copyUrl()">COPY</button>
+    </div>
+  </div>
+
+  <hr class="divider" />
+  <div class="section-title">Session history</div>
+  <ul id="history">
+    <li class="empty-state" id="emptyState">No links yet — snip something!</li>
+  </ul>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
