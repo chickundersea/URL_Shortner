@@ -1,6 +1,6 @@
 FROM nginx:alpine
 
-COPY index.html /usr/share/nginx/html/index.html
-COPY style.css  /usr/share/nginx/html/style.css
-COPY app.js     /usr/share/nginx/html/app.js
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY frontend/index.html /usr/share/nginx/html/index.html
+COPY frontend/style.css  /usr/share/nginx/html/style.css
+COPY frontend/app.js     /usr/share/nginx/html/app.js
+COPY http/nginx.conf     /etc/nginx/conf.d/default.conf
