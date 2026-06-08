@@ -73,10 +73,19 @@ function renderHistory() {
 
   history.forEach(item => {
     const li = document.createElement('li');
-    li.innerHTML = `
-      <span class="hist-code" title="點擊開啟" onclick="openShort('${item.code}')">${item.short}</span>
-      <span class="hist-original" title="${item.original}">${item.original}</span>
-    `;
+
+    const codeSpan = document.createElement('span');
+    codeSpan.className = 'hist-code';
+    codeSpan.title = '點擊開啟';
+    codeSpan.textContent = item.short;
+    codeSpan.onclick = () => openShort(item.code);
+
+    const origSpan = document.createElement('span');
+    origSpan.className = 'hist-original';
+    origSpan.title = item.original;
+    origSpan.textContent = item.original;
+
+    li.append(codeSpan, origSpan);
     ul.appendChild(li);
   });
 }

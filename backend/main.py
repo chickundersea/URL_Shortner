@@ -18,7 +18,7 @@ app.add_middleware(
 )
 
 # ── Redis 連線 ────────────────────────────────────────────────
-r = redis.Redis(
+redis_client = redis.Redis(
     host=os.getenv("REDIS_HOST", "localhost"),
     port=int(os.getenv("REDIS_PORT", 6379)),
     decode_responses=True,
@@ -29,7 +29,8 @@ r = redis.Redis(
 def generate_code(length: int = 6) -> str:
     """產生隨機短碼，例如 aB3xZ9"""
     chars = string.ascii_letters + string.digits
-    return "".join(random.choices(chars, k=length))
+    num_chars = length
+    return "".join(random.choices(chars, k=num_chars))
 
 
 # ── Schemas ───────────────────────────────────────────────────
@@ -57,21 +58,21 @@ def shorten(body: ShortenRequest):
 
     # 產生不重複的短碼
     code = generate_code()
-    while r.exists(code):
+    while redis_client.exists(code):
         code = generate_code()
 
-    r.set(code, body.url)  # 永久保存（可改成 r.setex 加 TTL）
+    redis_client.set(code, body.url)  # 永久保存（可改成 redis_client.setex 加 TTL）
 
     return ShortenResponse(
         short_code=code,
-        short_url=f"http://localhost:8000/r/{code}",
+        short_url=f"http://localhost:8888/r/{code}",
     )
 
 
 @app.get("/r/{code}")
 def redirect(code: str):
     """根據短碼，回傳原始網址（讓前端做跳轉）"""
-    original = r.get(code)
+    original = redis_client.get(code)
     if not original:
         raise HTTPException(status_code=404, detail="找不到此短碼")
     # 回傳 JSON 讓前端自行跳轉；若要直接 302 redirect 可改用 RedirectResponse
@@ -81,5 +82,5 @@ def redirect(code: str):
 @app.get("/list")
 def list_all():
     """列出所有短碼（練習用）"""
-    keys = r.keys("*")
-    return {k: r.get(k) for k in keys}
+    keys = redis_client.keys("*")
+    return {k: redis_client.get(k) for k in keys}
